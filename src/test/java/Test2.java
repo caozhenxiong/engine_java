@@ -1,5 +1,3 @@
-package com.alibabacloud.polar_race.engine;
-
 import com.alibabacloud.polar_race.engine.common.AbstractVisitor;
 import com.alibabacloud.polar_race.engine.common.ByteUtil;
 import com.alibabacloud.polar_race.engine.common.EngineRace;
