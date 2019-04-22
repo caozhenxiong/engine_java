@@ -1,0 +1,1 @@
+-server -Xms2800m -Xmx2800m -XX:MaxDirectMemorySize=64m -XX:MaxMetaspaceSize=100m -XX:NewRatio=4 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:-UseBiasedLocking -XX:-RestrictContended -XX:ParallelGCThreads=16 -XX:PretenureSizeThreshold=20m -XX:CMSInitiatingOccupancyFraction=90
