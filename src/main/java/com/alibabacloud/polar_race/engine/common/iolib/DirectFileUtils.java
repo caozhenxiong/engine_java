@@ -20,9 +20,12 @@ public class DirectFileUtils {
         final int _PC_REC_XFER_ALIGN = 0x11;
         fcblockSize = directIOLib.pathconf(path, _PC_REC_XFER_ALIGN);
         fcblockSize = lcm(fcblockSize, directIOLib.getpagesize());
-        System.out.println("block_size =========================================== " + fcblockSize);
+        System.out.println("block_size :" + fcblockSize);
     }
 
+    /**
+     * 计算直接内存开始地址，必须是blocksize的倍数
+     */
     public static long consAdrress(int capacity){
         NativeLong blockSize = new NativeLong(fcblockSize);
         PointerByReference pointerToPointer = new PointerByReference();
