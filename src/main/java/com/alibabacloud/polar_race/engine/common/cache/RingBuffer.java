@@ -96,6 +96,7 @@ public class RingBuffer {
 
 
     }
+
     //获取batch
     private int getBatch(int keyIndexTmp) {
         int keyIndex = keyIndexTmp + 1;

@@ -24,9 +24,9 @@ public class StoreConstants {
             FILE_NAMES[i] = i + "";
         }
         int count = 0;
-        for (int i = DATA_FILE_COUNT; i < DATA_FILE_COUNT * 2; i++){
+        for (int i = DATA_FILE_COUNT; i < DATA_FILE_COUNT * 2; i++) {
             FILE_NAMES[i] = "index" + count;
-            count ++;
+            count++;
         }
     }
 }

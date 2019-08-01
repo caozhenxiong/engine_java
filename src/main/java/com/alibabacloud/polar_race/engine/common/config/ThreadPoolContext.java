@@ -7,17 +7,17 @@ public class ThreadPoolContext {
 
     private static final ThreadPoolContext instance = new ThreadPoolContext();
 
-    private ThreadPoolContext(){
+    private ThreadPoolContext() {
 
     }
 
-    public static ThreadPoolContext T(){
+    public static ThreadPoolContext T() {
         return instance;
     }
 
     private ExecutorService producerThreadPool = Executors.newFixedThreadPool(CacheConstants.SPLIT_COUNT);
 
-    public ExecutorService get(){
+    public ExecutorService get() {
         return producerThreadPool;
     }
 

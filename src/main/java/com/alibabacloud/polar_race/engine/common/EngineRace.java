@@ -19,7 +19,7 @@ public class EngineRace extends AbstractEngine {
 
     @Override
     public void write(byte[] key, byte[] value) throws EngineException {
-        flow.write(key,value);
+        flow.write(key, value);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class EngineRace extends AbstractEngine {
 
     @Override
     public void range(byte[] lower, byte[] upper, AbstractVisitor visitor) throws EngineException {
-        flow.range(lower,upper,visitor);
+        flow.range(lower, upper, visitor);
     }
 
     @Override

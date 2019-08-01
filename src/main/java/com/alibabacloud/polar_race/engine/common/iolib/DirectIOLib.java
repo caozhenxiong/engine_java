@@ -18,13 +18,21 @@ public interface DirectIOLib extends Library {
 
 
     NativeLong pwrite(int fd, Pointer buf, NativeLong count, NativeLong offset);
+
     NativeLong pread(int fd, Pointer buf, NativeLong count, NativeLong offset);
+
     int open(String pathname, int flags);
+
     int open(String pathname, int flags, int mode);
+
     int getpagesize();
+
     int pathconf(String path, int name);
+
     String strerror(int errnum);
+
     int close(int fd); // musn't forget to do this
+
     int posix_memalign(PointerByReference memptr, NativeLong alignment, NativeLong size);
 
 }

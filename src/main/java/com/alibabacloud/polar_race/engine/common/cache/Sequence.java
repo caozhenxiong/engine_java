@@ -23,19 +23,19 @@ public class Sequence {
      */
     private volatile boolean isReady = false;
 
-    public void set(StoreBlock storeBlock, long keyL, int batch){
+    public void set(StoreBlock storeBlock, long keyL, int batch) {
         try {
             byte[] threadBytes = SupperThreadContext.get();
-            storeBlock.readForRange(keyL,threadBytes);
+            storeBlock.readForRange(keyL, threadBytes);
             int turnCount = 0;
-            while (isReady){
-                turnCount ++;
-                if (turnCount == 3){
+            while (isReady) {
+                turnCount++;
+                if (turnCount == 3) {
                     Thread.sleep(1);
                     turnCount = 0;
                 }
             }
-            System.arraycopy(threadBytes,0,this.data,0,StoreConstants.VALUE_BYTE);
+            System.arraycopy(threadBytes, 0, this.data, 0, StoreConstants.VALUE_BYTE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,12 +44,12 @@ public class Sequence {
         isReady = true;
     }
 
-    public Sequence get(int batch){
+    public Sequence get(int batch) {
         try {
             int turnCount = 0;
-            while(!isReady || this.batch != batch){
-                turnCount ++;
-                if (turnCount == 3){
+            while (!isReady || this.batch != batch) {
+                turnCount++;
+                if (turnCount == 3) {
                     Thread.sleep(1);
                     turnCount = 0;
                 }
@@ -61,18 +61,16 @@ public class Sequence {
         return this;
     }
 
-    public byte[] getData(){
+    public byte[] getData() {
         return this.data;
     }
 
-    public void increment(){
-        if(readCount.incrementAndGet() == readyCount){
+    public void increment() {
+        if (readCount.incrementAndGet() == readyCount) {
             readCount.set(0);
             isReady = false;
         }
     }
-
-
 
 
 }

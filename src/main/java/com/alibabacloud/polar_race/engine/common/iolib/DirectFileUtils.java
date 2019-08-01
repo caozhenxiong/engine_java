@@ -16,7 +16,7 @@ public class DirectFileUtils {
 
     private static int fcblockSize;
 
-    public static void initBlockSize(String path){
+    public static void initBlockSize(String path) {
         final int _PC_REC_XFER_ALIGN = 0x11;
         fcblockSize = directIOLib.pathconf(path, _PC_REC_XFER_ALIGN);
         fcblockSize = lcm(fcblockSize, directIOLib.getpagesize());
@@ -26,7 +26,7 @@ public class DirectFileUtils {
     /**
      * 计算直接内存开始地址，必须是blocksize的倍数
      */
-    public static long consAdrress(int capacity){
+    public static long consAdrress(int capacity) {
         NativeLong blockSize = new NativeLong(fcblockSize);
         PointerByReference pointerToPointer = new PointerByReference();
         // align memory for use with O_DIRECT
@@ -44,7 +44,7 @@ public class DirectFileUtils {
 
     public int openReadOnly(String path) throws IOException {
         int fd = directIOLib.open(path, DirectIOLib.O_RDONLY | DirectIOLib.O_DIRECT, 00644);
-        if (fd < 0){
+        if (fd < 0) {
             throw new IOException("open file error path = " + path);
         }
         return fd;
@@ -52,7 +52,7 @@ public class DirectFileUtils {
 
     public int pread(int fd, ByteBuffer buf, long offset) throws IOException {
         buf.clear();
-        final long address =  ((DirectBuffer)buf).address();
+        final long address = ((DirectBuffer) buf).address();
         Pointer pointer = new Pointer(address);
         int n = directIOLib.pread(fd, pointer, new NativeLong(fcblockSize), new NativeLong(offset)).intValue();
         if (n < 0) {
@@ -61,7 +61,7 @@ public class DirectFileUtils {
         return n;
     }
 
-    public void closeFile(int fd){
+    public void closeFile(int fd) {
         directIOLib.close(fd);
     }
 
@@ -80,6 +80,6 @@ public class DirectFileUtils {
             yc = t % yc;
         }
 
-        return (int)(x*y/g);
+        return (int) (x * y / g);
     }
 }

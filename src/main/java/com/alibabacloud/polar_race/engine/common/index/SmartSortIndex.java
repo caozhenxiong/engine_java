@@ -21,19 +21,19 @@ public class SmartSortIndex {
 
     private AtomicInteger index = new AtomicInteger(0);
 
-    public static SmartSortIndex getInstance(){
+    public static SmartSortIndex getInstance() {
         return instance;
     }
 
-    private SmartSortIndex(){
-        for (int i = 0; i < sortIndexs.length; i ++){
+    private SmartSortIndex() {
+        for (int i = 0; i < sortIndexs.length; i++) {
             sortIndexs[i] = Long.MAX_VALUE;
         }
     }
 
 
-    public void sort(){
-        if (isShuffled.get()){
+    public void sort() {
+        if (isShuffled.get()) {
             Arrays.parallelSort(sortIndexs);
             initLimitPoint();
             plusNum = index.get() - limit;
@@ -41,35 +41,35 @@ public class SmartSortIndex {
         }
     }
 
-    private void initLimitPoint(){
-        for (int i = 0; i < sortIndexs.length; i ++){
-            if (sortIndexs[i] >= 0){
+    private void initLimitPoint() {
+        for (int i = 0; i < sortIndexs.length; i++) {
+            if (sortIndexs[i] >= 0) {
                 limit = i;
                 break;
             }
         }
     }
 
-    public int[] getRangeIndex(byte[] start,byte[] end){
+    public int[] getRangeIndex(byte[] start, byte[] end) {
         int[] res = new int[2];
         res[0] = 0;
         res[1] = index.get() - 1;
         return res;
     }
 
-    public int calcuIndex(int index){
+    public int calcuIndex(int index) {
         return index + 1 > plusNum ? index - plusNum : limit + index;
     }
 
-    public int getCurrentSize(){
+    public int getCurrentSize() {
         return index.get();
     }
 
-    public void set(long element){
+    public void set(long element) {
         sortIndexs[index.getAndIncrement()] = element;
     }
 
-    public long get(int index){
+    public long get(int index) {
         return sortIndexs[calcuIndex(index)];
     }
 

@@ -46,24 +46,24 @@ public class Flow {
                     }
                 }
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-            throw new EngineException(RetCodeEnum.IO_ERROR,"init file error");
+            throw new EngineException(RetCodeEnum.IO_ERROR, "init file error");
         }
     }
 
     private void initAbstractFile() throws InterruptedException {
         ExecutorService executorSerivce = ThreadPoolContext.T().get();
         CountDownLatch countDownLatch = new CountDownLatch(StoreConstants.DATA_FILE_COUNT);
-        for(int i = 0; i < StoreConstants.DATA_FILE_COUNT; i ++){
+        for (int i = 0; i < StoreConstants.DATA_FILE_COUNT; i++) {
             final int a = i;
             executorSerivce.execute(() -> {
                 try {
-                    IndexFile indexFile = new IndexFile(path,a);
+                    IndexFile indexFile = new IndexFile(path, a);
                     IndexMemory indexMemory = indexFile.loadToMap();
                     int offset = isFirstStart ? -1 : indexFile.getStartOffset();
-                    DataFile dataFile = new DataFile(a,path,offset);
-                    datas[a] = new StoreBlock(a,indexFile,dataFile,indexMemory);
+                    DataFile dataFile = new DataFile(a, path, offset);
+                    datas[a] = new StoreBlock(a, indexFile, dataFile, indexMemory);
                     countDownLatch.countDown();
                 } catch (EngineException e) {
                     e.printStackTrace();
@@ -85,21 +85,21 @@ public class Flow {
         System.out.println("open complete ...........");
     }
 
-    public void write(byte[] key,byte[] value) throws EngineException{
+    public void write(byte[] key, byte[] value) throws EngineException {
         long keyL = ByteUtil.bytes2Long(key);
-        datas[hashKey(keyL)].write(key,keyL,value);
+        datas[hashKey(keyL)].write(key, keyL, value);
     }
 
-    public byte[] read(byte[] key) throws EngineException{
+    public byte[] read(byte[] key) throws EngineException {
         long keyL = ByteUtil.bytes2Long(key);
         StoreBlock storeBlock = datas[hashKey(keyL)];
         return storeBlock.read(keyL);
     }
 
-    private void load(){
-        if (isBlank){
-            synchronized (this){
-                if (isBlank){
+    private void load() {
+        if (isBlank) {
+            synchronized (this) {
+                if (isBlank) {
                     this.loadSortIndex();
                     sortIndex.sort();
                     ringBuffer = RingBuffer.getInstance();
@@ -109,12 +109,12 @@ public class Flow {
         }
     }
 
-    private void loadSortIndex(){
+    private void loadSortIndex() {
         CountDownLatch countDownLatch = new CountDownLatch(64);
-        for (StoreBlock storeBlock : datas){
+        for (StoreBlock storeBlock : datas) {
             ThreadPoolContext.T().get().execute(() -> {
                 long[] keyArr = storeBlock.getIndexMemory().getKeyArr();
-                for (int i = 0; i < keyArr.length; i++){
+                for (int i = 0; i < keyArr.length; i++) {
                     if (keyArr[i] == 0l) continue;
                     SmartSortIndex.getInstance().set(keyArr[i]);
                 }
@@ -128,33 +128,33 @@ public class Flow {
         }
     }
 
-    public void range(byte[] start, byte[] end, AbstractVisitor visitor) throws EngineException{
+    public void range(byte[] start, byte[] end, AbstractVisitor visitor) throws EngineException {
         this.load();
-        ringBuffer.startProducer(datas,sortIndex.getCurrentSize());
+        ringBuffer.startProducer(datas, sortIndex.getCurrentSize());
         int[] range = sortIndex.getRangeIndex(start, end);
         int startI = range[0];
         int endI = range[1];
-        for (int i = startI; i <= endI; i ++){
+        for (int i = startI; i <= endI; i++) {
             long key = sortIndex.get(i);
-            if (key == Long.MAX_VALUE){
+            if (key == Long.MAX_VALUE) {
                 break;
             }
             Sequence sequence = ringBuffer.get(i);
-            visitor.visit(ByteUtil.long2Bytes(key),sequence.getData());
+            visitor.visit(ByteUtil.long2Bytes(key), sequence.getData());
             sequence.increment();
         }
     }
 
-    public void close(){
-        for(StoreBlock storeBlock: datas){
+    public void close() {
+        for (StoreBlock storeBlock : datas) {
             storeBlock.close();
         }
         ThreadPoolContext.T().get().shutdownNow();
     }
 
-    private int hashKey(long key){
+    private int hashKey(long key) {
 //        HashCode hashCode = hashFunction.newHasher().putBytes(key).hash();
-        return (int)(key & (datas.length - 1));
+        return (int) (key & (datas.length - 1));
     }
 
 
