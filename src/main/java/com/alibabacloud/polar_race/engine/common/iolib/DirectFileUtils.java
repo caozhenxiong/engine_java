@@ -36,6 +36,7 @@ public class DirectFileUtils {
             field.setAccessible(true);
             return field.getLong(pointerToPointer.getValue());
         } catch (IllegalAccessException | NoSuchFieldException e) {
+
             e.printStackTrace();
         }
         return 0l;
