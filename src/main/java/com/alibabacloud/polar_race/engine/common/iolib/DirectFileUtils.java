@@ -27,6 +27,7 @@ public class DirectFileUtils {
      * 计算直接内存开始地址，必须是blocksize的倍数
      */
     public static long consAdrress(int capacity) {
+
         NativeLong blockSize = new NativeLong(fcblockSize);
         PointerByReference pointerToPointer = new PointerByReference();
         // align memory for use with O_DIRECT
